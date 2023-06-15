@@ -1,0 +1,30 @@
+
+entity Game {
+	name String required,
+    subName String required,
+    description String
+}
+
+entity Character {
+	firstName String required,
+    secondName String required,
+    race String required,
+    class String required,
+    description String
+}
+
+entity Attributes {
+	name String required,
+    qtd String required
+}
+
+relationship OneToMany {
+	Character to Attributes{character}
+    Game to Character{game}
+}
+
+paginate Game with pagination
+paginate Character with infinite-scroll
+
+service all with serviceImpl
+
