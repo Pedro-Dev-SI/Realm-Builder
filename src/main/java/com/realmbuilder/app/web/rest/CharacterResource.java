@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -17,7 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -29,7 +29,8 @@ import tech.jhipster.web.util.ResponseUtil;
  * REST controller for managing {@link com.realmbuilder.app.domain.Character}.
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/characters")
+@Transactional
 public class CharacterResource {
 
     private final Logger log = LoggerFactory.getLogger(CharacterResource.class);
@@ -55,7 +56,7 @@ public class CharacterResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new character, or with status {@code 400 (Bad Request)} if the character has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/characters")
+    @PostMapping("/create")
     public ResponseEntity<Character> createCharacter(@Valid @RequestBody Character character) throws URISyntaxException {
         log.debug("REST request to save Character : {}", character);
         if (character.getId() != null) {
@@ -78,7 +79,7 @@ public class CharacterResource {
      * or with status {@code 500 (Internal Server Error)} if the character couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/characters/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Character> updateCharacter(
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody Character character
@@ -113,7 +114,7 @@ public class CharacterResource {
      * or with status {@code 500 (Internal Server Error)} if the character couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/characters/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<Character> partialUpdateCharacter(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody Character character
@@ -144,7 +145,7 @@ public class CharacterResource {
      * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of characters in body.
      */
-    @GetMapping("/characters")
+    @GetMapping("/list")
     public ResponseEntity<List<Character>> getAllCharacters(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
         log.debug("REST request to get a page of Characters");
         Page<Character> page = characterService.findAll(pageable);
@@ -158,7 +159,7 @@ public class CharacterResource {
      * @param id the id of the character to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the character, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/characters/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Character> getCharacter(@PathVariable Long id) {
         log.debug("REST request to get Character : {}", id);
         Optional<Character> character = characterService.findOne(id);
@@ -171,7 +172,7 @@ public class CharacterResource {
      * @param id the id of the character to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/characters/{id}")
+    @DeleteMapping("/remove/{id}")
     public ResponseEntity<Void> deleteCharacter(@PathVariable Long id) {
         log.debug("REST request to delete Character : {}", id);
         characterService.delete(id);

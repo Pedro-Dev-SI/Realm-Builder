@@ -59,7 +59,7 @@ class AttributesResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Attributes createEntity(EntityManager em) {
-        Attributes attributes = new Attributes().name(DEFAULT_NAME).qtd(DEFAULT_QTD);
+        Attributes attributes = new Attributes().name(DEFAULT_NAME).strength(DEFAULT_QTD);
         return attributes;
     }
 

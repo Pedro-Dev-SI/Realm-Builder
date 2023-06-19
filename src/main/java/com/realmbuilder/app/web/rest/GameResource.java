@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -17,7 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -29,7 +29,8 @@ import tech.jhipster.web.util.ResponseUtil;
  * REST controller for managing {@link com.realmbuilder.app.domain.Game}.
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/game")
+@Transactional
 public class GameResource {
 
     private final Logger log = LoggerFactory.getLogger(GameResource.class);
@@ -55,7 +56,7 @@ public class GameResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new game, or with status {@code 400 (Bad Request)} if the game has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/games")
+    @PostMapping("/create")
     public ResponseEntity<Game> createGame(@Valid @RequestBody Game game) throws URISyntaxException {
         log.debug("REST request to save Game : {}", game);
         if (game.getId() != null) {
@@ -63,7 +64,7 @@ public class GameResource {
         }
         Game result = gameService.save(game);
         return ResponseEntity
-            .created(new URI("/api/games/" + result.getId()))
+            .created(new URI("/api/game/create" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
@@ -78,7 +79,7 @@ public class GameResource {
      * or with status {@code 500 (Internal Server Error)} if the game couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/games/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Game> updateGame(@PathVariable(value = "id", required = false) final Long id, @Valid @RequestBody Game game)
         throws URISyntaxException {
         log.debug("REST request to update Game : {}, {}", id, game);
@@ -111,7 +112,7 @@ public class GameResource {
      * or with status {@code 500 (Internal Server Error)} if the game couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/games/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<Game> partialUpdateGame(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody Game game
@@ -142,7 +143,7 @@ public class GameResource {
      * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of games in body.
      */
-    @GetMapping("/games")
+    @GetMapping("/list")
     public ResponseEntity<List<Game>> getAllGames(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
         log.debug("REST request to get a page of Games");
         Page<Game> page = gameService.findAll(pageable);
@@ -156,7 +157,7 @@ public class GameResource {
      * @param id the id of the game to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the game, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/games/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Game> getGame(@PathVariable Long id) {
         log.debug("REST request to get Game : {}", id);
         Optional<Game> game = gameService.findOne(id);
@@ -169,7 +170,7 @@ public class GameResource {
      * @param id the id of the game to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/games/{id}")
+    @DeleteMapping("/remove/{id}")
     public ResponseEntity<Void> deleteGame(@PathVariable Long id) {
         log.debug("REST request to delete Game : {}", id);
         gameService.delete(id);

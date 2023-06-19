@@ -1,56 +1,72 @@
 package com.realmbuilder.app.service;
 
 import com.realmbuilder.app.domain.Attributes;
+import com.realmbuilder.app.repository.AttributesRepository;
 import java.util.List;
 import java.util.Optional;
+import lombok.Getter;
+import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Service Interface for managing {@link Attributes}.
- */
-public interface AttributesService {
-    /**
-     * Save a attributes.
-     *
-     * @param attributes the entity to save.
-     * @return the persisted entity.
-     */
-    Attributes save(Attributes attributes);
+@Service
+@Transactional
+@Getter
+@Setter
+public class AttributesService {
 
-    /**
-     * Updates a attributes.
-     *
-     * @param attributes the entity to update.
-     * @return the persisted entity.
-     */
-    Attributes update(Attributes attributes);
+    private final Logger log = LoggerFactory.getLogger(AttributesService.class);
 
-    /**
-     * Partially updates a attributes.
-     *
-     * @param attributes the entity to update partially.
-     * @return the persisted entity.
-     */
-    Optional<Attributes> partialUpdate(Attributes attributes);
+    private final AttributesRepository attributesRepository;
 
-    /**
-     * Get all the attributes.
-     *
-     * @return the list of entities.
-     */
-    List<Attributes> findAll();
+    public AttributesService(AttributesRepository attributesRepository) {
+        this.attributesRepository = attributesRepository;
+    }
 
-    /**
-     * Get the "id" attributes.
-     *
-     * @param id the id of the entity.
-     * @return the entity.
-     */
-    Optional<Attributes> findOne(Long id);
+    public Attributes save(Attributes attributes) {
+        log.debug("Request to save Attributes : {}", attributes);
+        return attributesRepository.save(attributes);
+    }
 
-    /**
-     * Delete the "id" attributes.
-     *
-     * @param id the id of the entity.
-     */
-    void delete(Long id);
+    public Attributes update(Attributes attributes) {
+        log.debug("Request to update Attributes : {}", attributes);
+        return attributesRepository.save(attributes);
+    }
+
+    public Optional<Attributes> partialUpdate(Attributes attributes) {
+        log.debug("Request to partially update Attributes : {}", attributes);
+
+        return attributesRepository
+            .findById(attributes.getId())
+            .map(existingAttributes -> {
+                if (attributes.getName() != null) {
+                    existingAttributes.setName(attributes.getName());
+                }
+                if (attributes.getStrength() != null) {
+                    existingAttributes.setStrength(attributes.getStrength());
+                }
+
+                return existingAttributes;
+            })
+            .map(attributesRepository::save);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Attributes> findAll() {
+        log.debug("Request to get all Attributes");
+        return attributesRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Attributes> findOne(Long id) {
+        log.debug("Request to get Attributes : {}", id);
+        return attributesRepository.findById(id);
+    }
+
+    public void delete(Long id) {
+        log.debug("Request to delete Attributes : {}", id);
+        attributesRepository.deleteById(id);
+    }
 }

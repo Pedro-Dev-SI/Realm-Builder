@@ -1,58 +1,78 @@
 package com.realmbuilder.app.service;
 
 import com.realmbuilder.app.domain.Character;
+import com.realmbuilder.app.repository.CharacterRepository;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Service Interface for managing {@link Character}.
- */
-public interface CharacterService {
-    /**
-     * Save a character.
-     *
-     * @param character the entity to save.
-     * @return the persisted entity.
-     */
-    Character save(Character character);
+@Service
+@Transactional
+public class CharacterService {
 
-    /**
-     * Updates a character.
-     *
-     * @param character the entity to update.
-     * @return the persisted entity.
-     */
-    Character update(Character character);
+    private final Logger log = LoggerFactory.getLogger(CharacterService.class);
 
-    /**
-     * Partially updates a character.
-     *
-     * @param character the entity to update partially.
-     * @return the persisted entity.
-     */
-    Optional<Character> partialUpdate(Character character);
+    private final CharacterRepository characterRepository;
 
-    /**
-     * Get all the characters.
-     *
-     * @param pageable the pagination information.
-     * @return the list of entities.
-     */
-    Page<Character> findAll(Pageable pageable);
+    public CharacterService(CharacterRepository characterRepository) {
+        this.characterRepository = characterRepository;
+    }
 
-    /**
-     * Get the "id" character.
-     *
-     * @param id the id of the entity.
-     * @return the entity.
-     */
-    Optional<Character> findOne(Long id);
+    public Character save(Character character) {
+        log.debug("Request to save Character : {}", character);
+        return characterRepository.save(character);
+    }
 
-    /**
-     * Delete the "id" character.
-     *
-     * @param id the id of the entity.
-     */
-    void delete(Long id);
+    public Character update(Character character) {
+        log.debug("Request to update Character : {}", character);
+        return characterRepository.save(character);
+    }
+
+    public Optional<Character> partialUpdate(Character character) {
+        log.debug("Request to partially update Character : {}", character);
+
+        return characterRepository
+            .findById(character.getId())
+            .map(existingCharacter -> {
+                if (character.getFirstName() != null) {
+                    existingCharacter.setFirstName(character.getFirstName());
+                }
+                if (character.getSecondName() != null) {
+                    existingCharacter.setSecondName(character.getSecondName());
+                }
+                if (character.getRace() != null) {
+                    existingCharacter.setRace(character.getRace());
+                }
+                if (character.getClass() != null) {
+                    existingCharacter.setClassification(character.getClassification());
+                }
+                if (character.getDescription() != null) {
+                    existingCharacter.setDescription(character.getDescription());
+                }
+
+                return existingCharacter;
+            })
+            .map(characterRepository::save);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Character> findAll(Pageable pageable) {
+        log.debug("Request to get all Characters");
+        return characterRepository.findAll(pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Character> findOne(Long id) {
+        log.debug("Request to get Character : {}", id);
+        return characterRepository.findById(id);
+    }
+
+    public void delete(Long id) {
+        log.debug("Request to delete Character : {}", id);
+        characterRepository.deleteById(id);
+    }
 }

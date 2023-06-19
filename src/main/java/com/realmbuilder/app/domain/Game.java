@@ -1,24 +1,19 @@
 package com.realmbuilder.app.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Game.
  */
 @Entity
 @Table(name = "game")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Getter
 @Setter
 public class Game implements Serializable {
@@ -32,12 +27,12 @@ public class Game implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "title", nullable = false)
+    private String title;
 
     @NotNull
-    @Column(name = "sub_name", nullable = false)
-    private String subName;
+    @Column(name = "sub_title", nullable = false)
+    private String subtitle;
 
     @Column(name = "description")
     private String description;
@@ -71,8 +66,8 @@ public class Game implements Serializable {
     public String toString() {
         return "Game{" +
             "id=" + getId() +
-            ", name='" + getName() + "'" +
-            ", subName='" + getSubName() + "'" +
+            ", name='" + getTitle() + "'" +
+            ", subName='" + getSubtitle() + "'" +
             ", description='" + getDescription() + "'" +
             "}";
     }

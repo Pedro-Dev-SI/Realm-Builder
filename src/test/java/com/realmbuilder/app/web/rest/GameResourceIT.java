@@ -95,8 +95,8 @@ class GameResourceIT {
         List<Game> gameList = gameRepository.findAll();
         assertThat(gameList).hasSize(databaseSizeBeforeCreate + 1);
         Game testGame = gameList.get(gameList.size() - 1);
-        assertThat(testGame.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testGame.getSubName()).isEqualTo(DEFAULT_SUB_NAME);
+        assertThat(testGame.getTitle()).isEqualTo(DEFAULT_NAME);
+        assertThat(testGame.getSubtitle()).isEqualTo(DEFAULT_SUB_NAME);
         assertThat(testGame.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
     }
 
@@ -123,7 +123,7 @@ class GameResourceIT {
     void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = gameRepository.findAll().size();
         // set the field null
-        game.setName(null);
+        game.setTitle(null);
 
         // Create the Game, which fails.
 
@@ -140,7 +140,7 @@ class GameResourceIT {
     void checkSubNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = gameRepository.findAll().size();
         // set the field null
-        game.setSubName(null);
+        game.setSubtitle(null);
 
         // Create the Game, which fails.
 
@@ -219,8 +219,8 @@ class GameResourceIT {
         List<Game> gameList = gameRepository.findAll();
         assertThat(gameList).hasSize(databaseSizeBeforeUpdate);
         Game testGame = gameList.get(gameList.size() - 1);
-        assertThat(testGame.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testGame.getSubName()).isEqualTo(UPDATED_SUB_NAME);
+        assertThat(testGame.getTitle()).isEqualTo(UPDATED_NAME);
+        assertThat(testGame.getSubtitle()).isEqualTo(UPDATED_SUB_NAME);
         assertThat(testGame.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
 
@@ -304,8 +304,8 @@ class GameResourceIT {
         List<Game> gameList = gameRepository.findAll();
         assertThat(gameList).hasSize(databaseSizeBeforeUpdate);
         Game testGame = gameList.get(gameList.size() - 1);
-        assertThat(testGame.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testGame.getSubName()).isEqualTo(DEFAULT_SUB_NAME);
+        assertThat(testGame.getTitle()).isEqualTo(DEFAULT_NAME);
+        assertThat(testGame.getSubtitle()).isEqualTo(DEFAULT_SUB_NAME);
         assertThat(testGame.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
     }
 
@@ -335,8 +335,8 @@ class GameResourceIT {
         List<Game> gameList = gameRepository.findAll();
         assertThat(gameList).hasSize(databaseSizeBeforeUpdate);
         Game testGame = gameList.get(gameList.size() - 1);
-        assertThat(testGame.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testGame.getSubName()).isEqualTo(UPDATED_SUB_NAME);
+        assertThat(testGame.getTitle()).isEqualTo(UPDATED_NAME);
+        assertThat(testGame.getSubtitle()).isEqualTo(UPDATED_SUB_NAME);
         assertThat(testGame.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
 

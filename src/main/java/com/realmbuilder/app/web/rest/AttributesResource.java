@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -23,7 +24,8 @@ import tech.jhipster.web.util.ResponseUtil;
  * REST controller for managing {@link com.realmbuilder.app.domain.Attributes}.
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/character")
+@Transactional
 public class AttributesResource {
 
     private final Logger log = LoggerFactory.getLogger(AttributesResource.class);

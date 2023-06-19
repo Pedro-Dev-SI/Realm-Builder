@@ -84,6 +84,7 @@
         <sonar-maven-plugin.version>3.9.1.2184</sonar-maven-plugin.version>
 
         <!-- jhipster-needle-maven-property -->
+        <lombok.version>1.18.22</lombok.version>
     </properties>
 
     <dependencyManagement>
@@ -103,7 +104,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.28</version>
+            <version>1.18.22</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -424,6 +425,11 @@
                                 <version>${jaxb-runtime.version}</version>
                             </path>
                             <!-- jhipster-needle-maven-add-annotation-processor -->
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <version>1.18.22</version>
+                            </path>
                         </annotationProcessorPaths>
                     </configuration>
                 </plugin>
