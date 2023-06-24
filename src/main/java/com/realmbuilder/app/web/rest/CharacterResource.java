@@ -3,6 +3,7 @@ package com.realmbuilder.app.web.rest;
 import com.realmbuilder.app.domain.Character;
 import com.realmbuilder.app.repository.CharacterRepository;
 import com.realmbuilder.app.service.CharacterService;
+import com.realmbuilder.app.service.GameService;
 import com.realmbuilder.app.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -42,10 +43,13 @@ public class CharacterResource {
 
     private final CharacterService characterService;
 
+    private final GameService gameService;
+
     private final CharacterRepository characterRepository;
 
-    public CharacterResource(CharacterService characterService, CharacterRepository characterRepository) {
+    public CharacterResource(CharacterService characterService, GameService gameService, CharacterRepository characterRepository) {
         this.characterService = characterService;
+        this.gameService = gameService;
         this.characterRepository = characterRepository;
     }
 
@@ -56,47 +60,25 @@ public class CharacterResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new character, or with status {@code 400 (Bad Request)} if the character has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/create")
-    public ResponseEntity<Character> createCharacter(@Valid @RequestBody Character character) throws URISyntaxException {
+    @PostMapping("/create/{gameId}")
+    public ResponseEntity<Character> createCharacter(@PathVariable(value = "gameId") long gameId, @RequestBody Character character)
+        throws URISyntaxException {
         log.debug("REST request to save Character : {}", character);
         if (character.getId() != null) {
             throw new BadRequestAlertException("A new character cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Character result = characterService.save(character);
+        Character result = characterService.save(character, gameId);
         return ResponseEntity
             .created(new URI("/api/characters/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
-    /**
-     * {@code PUT  /characters/:id} : Updates an existing character.
-     *
-     * @param id the id of the character to save.
-     * @param character the character to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated character,
-     * or with status {@code 400 (Bad Request)} if the character is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the character couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
-    @PutMapping("/{id}")
-    public ResponseEntity<Character> updateCharacter(
-        @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody Character character
-    ) throws URISyntaxException {
-        log.debug("REST request to update Character : {}, {}", id, character);
-        if (character.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        }
-        if (!Objects.equals(id, character.getId())) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
-        }
-
-        if (!characterRepository.existsById(id)) {
-            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
-
-        Character result = characterService.update(character);
+    @PutMapping("/{gameId}")
+    public ResponseEntity<Character> updateCharacter(@PathVariable(value = "gameId") long gameId, @Valid @RequestBody Character character)
+        throws URISyntaxException {
+        log.debug("REST request to update Character : {}, {}", character.getId(), character);
+        Character result = characterService.update(character, gameId);
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, character.getId().toString()))
@@ -145,10 +127,13 @@ public class CharacterResource {
      * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of characters in body.
      */
-    @GetMapping("/list")
-    public ResponseEntity<List<Character>> getAllCharacters(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
+    @GetMapping("/list/{gameId}")
+    public ResponseEntity<List<Character>> getAllCharacters(
+        @PathVariable(value = "gameId") long gameId,
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable
+    ) {
         log.debug("REST request to get a page of Characters");
-        Page<Character> page = characterService.findAll(pageable);
+        Page<Character> page = characterService.findAll(pageable, gameId);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

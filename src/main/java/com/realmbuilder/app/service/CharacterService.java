@@ -17,18 +17,24 @@ public class CharacterService {
     private final Logger log = LoggerFactory.getLogger(CharacterService.class);
 
     private final CharacterRepository characterRepository;
+    private final GameService gameService;
 
-    public CharacterService(CharacterRepository characterRepository) {
+    public CharacterService(CharacterRepository characterRepository, GameService gameService) {
         this.characterRepository = characterRepository;
+        this.gameService = gameService;
     }
 
-    public Character save(Character character) {
+    public Character save(Character character, long gameId) {
         log.debug("Request to save Character : {}", character);
+        var game = gameService.findOne(gameId);
+        character.setGame(game.get());
         return characterRepository.save(character);
     }
 
-    public Character update(Character character) {
+    public Character update(Character character, long gameId) {
         log.debug("Request to update Character : {}", character);
+        var game = gameService.findOne(gameId).get();
+        character.setGame(game);
         return characterRepository.save(character);
     }
 
@@ -60,9 +66,9 @@ public class CharacterService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Character> findAll(Pageable pageable) {
+    public Page<Character> findAll(Pageable pageable, long gameId) {
         log.debug("Request to get all Characters");
-        return characterRepository.findAll(pageable);
+        return characterRepository.findAllByGameId(pageable, gameId);
     }
 
     @Transactional(readOnly = true)

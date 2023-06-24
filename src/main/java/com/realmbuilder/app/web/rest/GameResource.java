@@ -72,25 +72,20 @@ public class GameResource {
     /**
      * {@code PUT  /games/:id} : Updates an existing game.
      *
-     * @param id the id of the game to save.
      * @param game the game to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated game,
      * or with status {@code 400 (Bad Request)} if the game is not valid,
      * or with status {@code 500 (Internal Server Error)} if the game couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<Game> updateGame(@PathVariable(value = "id", required = false) final Long id, @Valid @RequestBody Game game)
-        throws URISyntaxException {
-        log.debug("REST request to update Game : {}, {}", id, game);
+    @PutMapping
+    public ResponseEntity<Game> updateGame(@Valid @RequestBody Game game) throws URISyntaxException {
+        log.debug("REST request to update Game : {}", game);
         if (game.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, game.getId())) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
-        }
 
-        if (!gameRepository.existsById(id)) {
+        if (!gameRepository.existsById(game.getId())) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 

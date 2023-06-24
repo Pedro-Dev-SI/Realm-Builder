@@ -1,5 +1,6 @@
 package com.realmbuilder.app.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -61,9 +62,6 @@ public class Character implements Serializable {
     @ManyToOne
     @JoinColumn(name = "game_id")
     private Game game;
-
-    @OneToMany(mappedBy = "character", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Attributes> attributes = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

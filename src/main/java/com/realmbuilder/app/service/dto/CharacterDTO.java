@@ -20,6 +20,7 @@ public class CharacterDTO {
     private String classification;
     private String description;
     private String image;
+    private long gameId;
 
     public CharacterDTO(Character character) {
         this.firstName = character.getFirstName();
@@ -28,5 +29,6 @@ public class CharacterDTO {
         this.classification = character.getClassification();
         this.description = character.getDescription();
         this.image = character.getImage();
+        this.gameId = character.getGame().getId();
     }
 }

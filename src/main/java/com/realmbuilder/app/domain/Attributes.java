@@ -36,10 +36,6 @@ public class Attributes implements Serializable {
     @Column(name = "strength")
     private Integer strength;
 
-    @ManyToOne
-    @JoinColumn(name = "attributes")
-    private Character character;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {

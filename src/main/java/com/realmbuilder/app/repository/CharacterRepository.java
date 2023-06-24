@@ -1,6 +1,9 @@
 package com.realmbuilder.app.repository;
 
 import com.realmbuilder.app.domain.Character;
+import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -9,4 +12,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface CharacterRepository extends JpaRepository<Character, Long> {}
+public interface CharacterRepository extends JpaRepository<Character, Long> {
+    Page<Character> findAllByGameId(Pageable pageable, long gameId);
+}
