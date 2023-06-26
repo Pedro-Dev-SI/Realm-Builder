@@ -14,4 +14,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CharacterRepository extends JpaRepository<Character, Long> {
     Page<Character> findAllByGameId(Pageable pageable, long gameId);
+    List<Character> findAllByGameId(Long id);
+    void deleteAllByIdIsIn(List<Long> ids);
 }

@@ -2,7 +2,10 @@ package com.realmbuilder.app.service;
 
 import com.realmbuilder.app.domain.Character;
 import com.realmbuilder.app.repository.CharacterRepository;
+import com.realmbuilder.app.repository.GameRepository;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,23 +20,24 @@ public class CharacterService {
     private final Logger log = LoggerFactory.getLogger(CharacterService.class);
 
     private final CharacterRepository characterRepository;
-    private final GameService gameService;
 
-    public CharacterService(CharacterRepository characterRepository, GameService gameService) {
+    private final GameRepository gameRepository;
+
+    public CharacterService(CharacterRepository characterRepository, GameRepository gameRepository) {
         this.characterRepository = characterRepository;
-        this.gameService = gameService;
+        this.gameRepository = gameRepository;
     }
 
     public Character save(Character character, long gameId) {
         log.debug("Request to save Character : {}", character);
-        var game = gameService.findOne(gameId);
+        var game = gameRepository.findById(gameId);
         character.setGame(game.get());
         return characterRepository.save(character);
     }
 
     public Character update(Character character, long gameId) {
         log.debug("Request to update Character : {}", character);
-        var game = gameService.findOne(gameId).get();
+        var game = gameRepository.findById(gameId).get();
         character.setGame(game);
         return characterRepository.save(character);
     }
@@ -54,7 +58,7 @@ public class CharacterService {
                     existingCharacter.setRace(character.getRace());
                 }
                 if (character.getClass() != null) {
-                    existingCharacter.setClassification(character.getClassification());
+                    existingCharacter.setClassType(character.getClassType());
                 }
                 if (character.getDescription() != null) {
                     existingCharacter.setDescription(character.getDescription());
@@ -80,5 +84,11 @@ public class CharacterService {
     public void delete(Long id) {
         log.debug("Request to delete Character : {}", id);
         characterRepository.deleteById(id);
+    }
+
+    public void removeAllCharactersFromGame(Long id) {
+        var characters = characterRepository.findAllByGameId(id);
+        List<Long> charactersIds = characters.stream().map(Character::getId).collect(Collectors.toList());
+        characterRepository.deleteAllByIdIsIn(charactersIds);
     }
 }

@@ -17,18 +17,18 @@ public class CharacterDTO {
     private String firstName;
     private String secondName;
     private String race;
-    private String classification;
+    private String classType;
     private String description;
-    private String image;
+    private String imageUrl;
     private long gameId;
 
     public CharacterDTO(Character character) {
         this.firstName = character.getFirstName();
         this.secondName = character.getSecondName();
         this.race = character.getRace();
-        this.classification = character.getClassification();
+        this.classType = character.getClassType();
         this.description = character.getDescription();
-        this.image = character.getImage();
+        this.imageUrl = character.getImageUrl();
         this.gameId = character.getGame().getId();
     }
 }

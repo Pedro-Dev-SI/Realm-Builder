@@ -21,9 +21,11 @@ public class GameService {
     private final Logger log = LoggerFactory.getLogger(GameService.class);
 
     private final GameRepository gameRepository;
+    private final CharacterService characterService;
 
-    public GameService(GameRepository gameRepository) {
+    public GameService(GameRepository gameRepository, CharacterService characterService) {
         this.gameRepository = gameRepository;
+        this.characterService = characterService;
     }
 
     public Game save(Game game) {
@@ -71,6 +73,7 @@ public class GameService {
 
     public void delete(Long id) {
         log.debug("Request to delete Game : {}", id);
+        characterService.removeAllCharactersFromGame(id);
         gameRepository.deleteById(id);
     }
 }
