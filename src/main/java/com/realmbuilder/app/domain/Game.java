@@ -34,11 +34,11 @@ public class Game implements Serializable {
     @Column(name = "sub_title", nullable = false)
     private String subtitle;
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "text")
     private String description;
 
-    @Column(name = "image")
-    private String image;
+    @Column(name = "image_url", columnDefinition = "text")
+    private String imageUrl;
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore

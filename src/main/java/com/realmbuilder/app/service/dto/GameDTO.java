@@ -17,12 +17,12 @@ public class GameDTO {
     private String title;
     private String subTitle;
     private String description;
-    private String image;
+    private String imageUrl;
 
     public GameDTO(Game game) {
         this.title = game.getTitle();
         this.subTitle = game.getSubtitle();
         this.description = game.getDescription();
-        this.image = game.getImage();
+        this.imageUrl = game.getImageUrl();
     }
 }

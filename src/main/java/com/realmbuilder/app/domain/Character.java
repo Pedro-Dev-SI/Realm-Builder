@@ -1,19 +1,13 @@
 package com.realmbuilder.app.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -50,14 +44,14 @@ public class Character implements Serializable {
     private String race;
 
     @NotNull
-    @Column(name = "classification", nullable = false)
-    private String classification;
+    @Column(name = "class_type", nullable = false)
+    private String classType;
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "text")
     private String description;
 
-    @Column(name = "image")
-    private String image;
+    @Column(name = "image_url", columnDefinition = "text")
+    private String imageUrl;
 
     @ManyToOne
     @JoinColumn(name = "game_id")
@@ -88,7 +82,7 @@ public class Character implements Serializable {
             ", firstName='" + getFirstName() + "'" +
             ", secondName='" + getSecondName() + "'" +
             ", race='" + getRace() + "'" +
-            ", classification='" + getClassification() + "'" +
+            ", classification='" + getClassType() + "'" +
             ", description='" + getDescription() + "'" +
             "}";
     }

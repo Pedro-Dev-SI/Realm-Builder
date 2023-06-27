@@ -14,22 +14,22 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="first_name" type="varchar(255)">
+            <column name="first_name" type="varchar(100)">
                 <constraints nullable="false" />
             </column>
-            <column name="second_name" type="varchar(255)">
+            <column name="second_name" type="varchar(100)">
                 <constraints nullable="false" />
             </column>
             <column name="race" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
-            <column name="classification" type="varchar(255)">
+            <column name="class_type" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
-            <column name="description" type="varchar(255)">
+            <column name="description" type="text">
                 <constraints nullable="true" />
             </column>
-            <column name="image" type="varchar(255)">
+            <column name="image_url" type="text">
                 <constraints nullable="true" />
             </column>
             <column name="game_id" type="bigint">
